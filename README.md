@@ -20,7 +20,8 @@ Initially an abandoned bitbucket repo, but lotsa love has been given to it.
 *   Proper windows credential store access.
 *   Delete support.
 *   Solid testing.
-*   Automated builds in all target environments.
+*   Automated builds in all target environments aside from Kwallet, if someone knows how to start it gha please share.
+*   Windows seems prone to race conditions where reads/writes may not be immediately visible.  PRs welcome.
 
 Initial repo: [https://bitbucket.org/east301/java-keyring](https://bitbucket.org/east301/java-keyring)
 
@@ -53,6 +54,7 @@ __Linux/Freedesktop__
 
 __Windows__
 *   Passwords are stored using [Credential Manager](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager), exceptions will contain [Error Codes](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes).   Access is via the [Wincred](https://docs.microsoft.com/en-us/windows/win32/api/wincred/) api.  
+Windows seems prone to race conditions where reads/writes may not be immediately visible.
 
 ## Usage ##
 

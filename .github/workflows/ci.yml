@@ -25,6 +25,18 @@ jobs:
             java-version: 17
             distribution: 'adopt'
             keyring: 'gnome'
+          # - os: "ubuntu-latest"
+          #   java-version: 8
+          #   distribution: 'adopt'
+          #   keyring: 'kde'
+          # - os: "ubuntu-latest"
+          #   java-version: 11
+          #   distribution: 'adopt'
+          #   keyring: 'kde'
+          # - os: "ubuntu-latest"
+          #   java-version: 17
+          #   distribution: 'adopt'
+          #   keyring: 'kde'  
           - os: "macos-latest"
             java-version: 8
             distribution: 'adopt'
@@ -50,8 +62,10 @@ jobs:
           submodules: true
       - name: Install packages on linux
         run: >
-          if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+          if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ] && [ "${{matrix.keyring}}" == "gnome" ]; then
             sudo apt-get install -y --no-install-recommends dbus-x11 gnome-keyring dbus libdbus-glib-1-dev libsecret-tools
+          elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ] && [ "${{matrix.keyring}}" == "kde" ]; then
+            sudo apt-get install -y --no-install-recommends dbus-x11 kwalletmanager libkf5wallet-bin kwalletcli
           fi
         shell: bash 
       - name: Set up Java
@@ -61,7 +75,7 @@ jobs:
           java-version: ${{ matrix.java-version }}
       - name: Maven Install
         run: >
-          source $GITHUB_WORKSPACE/.setupkeystore.sh &&
+          source $GITHUB_WORKSPACE/.setupkeystore.sh "${{matrix.keyring}}" &&
           mvn --batch-mode --update-snapshots -Dgpg.skip=true install
         shell: bash  
       - name: Upload coverage to Codecov

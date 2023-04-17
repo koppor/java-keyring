@@ -102,15 +102,17 @@ public class WinCredentialStoreBackend implements KeyringBackend {
       throw new PasswordAccessException("Error code " + nativeLibraries.getKernel32().GetLastError().intValue());
     }
     boolean visibile = true;
-    while (visibile) {
+    int retries = 0;
+    while ( visibile || retries < 10) {
       try {
         getPassword(service, account);
-        Thread.sleep(1);
+        Thread.sleep(10);
       } catch (PasswordAccessException pae) {
         visibile = false;
       } catch (InterruptedException ie) {
         // nothing to do.
       }
+      retries += 1;
     }
   }
 

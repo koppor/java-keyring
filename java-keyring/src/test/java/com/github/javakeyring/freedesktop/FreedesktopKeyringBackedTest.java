@@ -31,12 +31,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assume.assumeTrue;
 
+import com.github.javakeyring.BackendNotSupportedException;
 import com.github.javakeyring.Keyring;
 import com.github.javakeyring.KeyringStorageType;
 import org.junit.Test;
 
 import com.github.javakeyring.PasswordAccessException;
 import com.github.javakeyring.internal.freedesktop.FreedesktopKeyringBackend;
+import com.github.javakeyring.internal.kde.KWalletBackend;
 import com.sun.jna.Platform;
 
 /**
@@ -56,6 +58,7 @@ public class FreedesktopKeyringBackedTest {
   @Test
   public void testSetup() throws Exception {
     assumeTrue(Platform.isLinux() && Keyring.create().getKeyringStorageType() == KeyringStorageType.GNOME_KEYRING);
+    assumeTrue(catchThrowable(KWalletBackend::new) instanceof BackendNotSupportedException);
     assertThat(catchThrowable(() -> new FreedesktopKeyringBackend())).as("Setup should succeed").doesNotThrowAnyException();
   }
 

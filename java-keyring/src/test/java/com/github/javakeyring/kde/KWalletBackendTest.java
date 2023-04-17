@@ -26,10 +26,12 @@
  */
 package com.github.javakeyring.kde;
 
+import com.github.javakeyring.BackendNotSupportedException;
 import com.github.javakeyring.Keyring;
 import com.github.javakeyring.KeyringStorageType;
 import com.github.javakeyring.PasswordAccessException;
 import com.github.javakeyring.internal.KeyringBackend;
+import com.github.javakeyring.internal.freedesktop.FreedesktopKeyringBackend;
 import com.github.javakeyring.internal.kde.KWalletBackend;
 import com.sun.jna.Platform;
 import org.junit.Test;
@@ -52,7 +54,8 @@ public class KWalletBackendTest {
    */
   @Test
   public void testSetup() throws Exception {
-    assumeTrue(Platform.isLinux() && Keyring.create().getKeyringStorageType() == KeyringStorageType.KWALLET);
+    assumeTrue(Platform.isLinux());
+    assumeTrue(catchThrowable(FreedesktopKeyringBackend::new) instanceof BackendNotSupportedException);
     assertThat(catchThrowable(KWalletBackend::new)).as("Setup should succeed").doesNotThrowAnyException();
   }
 

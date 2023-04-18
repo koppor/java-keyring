@@ -49,7 +49,7 @@ public class KWalletBackend implements KeyringBackend {
       wallet = connection.getRemoteObject("org.kde.kwalletd5", "/modules/kwalletd5", KWallet.class, true);
       wallet.localWallet(); //attempt connection to wallet
     } catch (Exception e) {
-      throw new BackendNotSupportedException("Cannot connect to KWallet");
+      throw new BackendNotSupportedException("Cannot connect to KWallet", e);
     }
   }
 

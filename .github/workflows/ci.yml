@@ -2,12 +2,15 @@ name: ci
 
 on:
   push:
-    branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 jobs:
   build:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.java-version }}-${{ matrix.keyring }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -25,18 +28,18 @@ jobs:
             java-version: 17
             distribution: 'adopt'
             keyring: 'gnome'
-          # - os: "ubuntu-latest"
-          #   java-version: 8
-          #   distribution: 'adopt'
-          #   keyring: 'kde'
-          # - os: "ubuntu-latest"
-          #   java-version: 11
-          #   distribution: 'adopt'
-          #   keyring: 'kde'
-          # - os: "ubuntu-latest"
-          #   java-version: 17
-          #   distribution: 'adopt'
-          #   keyring: 'kde'  
+          - os: "ubuntu-latest"
+            java-version: 8
+            distribution: 'adopt'
+            keyring: 'kde'
+          - os: "ubuntu-latest"
+            java-version: 11
+            distribution: 'adopt'
+            keyring: 'kde'
+          - os: "ubuntu-latest"
+            java-version: 17
+            distribution: 'adopt'
+            keyring: 'kde'
           - os: "macos-latest"
             java-version: 8
             distribution: 'adopt'
@@ -58,14 +61,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          submodules: true
       - name: Install packages on linux
         run: >
           if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ] && [ "${{matrix.keyring}}" == "gnome" ]; then
-            sudo apt-get install -y --no-install-recommends dbus-x11 gnome-keyring dbus libdbus-glib-1-dev libsecret-tools
+            sudo apt-get -qq install -y --no-install-recommends dbus-x11 gnome-keyring dbus libdbus-glib-1-dev libsecret-tools
           elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ] && [ "${{matrix.keyring}}" == "kde" ]; then
-            sudo apt-get install -y --no-install-recommends dbus-x11 kwalletmanager libkf5wallet-bin kwalletcli
+            sudo apt-get -qq install -y --no-install-recommends dbus-x11 kwalletcli
           fi
         shell: bash 
       - name: Set up Java
@@ -73,10 +74,20 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
-      - name: Maven Install
+      - name: Maven Install (macos, windows)
+        if: (matrix.os != 'ubuntu-latest')
         run: >
           source $GITHUB_WORKSPACE/.setupkeystore.sh "${{matrix.keyring}}" &&
           mvn --batch-mode --update-snapshots -Dgpg.skip=true install
-        shell: bash  
+        shell: bash
+      - name: Maven Install (linux)
+        if: (matrix.os == 'ubuntu-latest')
+        run: |
+          # kwalletcli needs a "working" display
+          xvfb-run --auto-servernum bash <<EOF
+            source $GITHUB_WORKSPACE/.setupkeystore.sh ${{matrix.keyring}}
+            mvn --batch-mode --update-snapshots -Dgpg.skip=true install
+          EOF
+        shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

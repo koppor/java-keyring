@@ -76,15 +76,14 @@ jobs:
           java-version: ${{ matrix.java-version }}
       - name: Maven Install (macos, windows)
         if: (matrix.os != 'ubuntu-latest')
-        run: >
-          source $GITHUB_WORKSPACE/.setupkeystore.sh "${{matrix.keyring}}" &&
-          mvn --batch-mode --update-snapshots -Dgpg.skip=true install
+        run: mvn --batch-mode --update-snapshots -Dgpg.skip=true install
         shell: bash
       - name: Maven Install (linux)
         if: (matrix.os == 'ubuntu-latest')
         run: |
           # kwalletcli needs a "working" display
           xvfb-run --auto-servernum bash <<EOF
+            # gnome needs setup work as well.
             source $GITHUB_WORKSPACE/.setupkeystore.sh ${{matrix.keyring}}
             mvn --batch-mode --update-snapshots -Dgpg.skip=true install
           EOF

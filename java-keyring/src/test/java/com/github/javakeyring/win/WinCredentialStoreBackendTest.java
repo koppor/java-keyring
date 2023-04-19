@@ -58,7 +58,8 @@ public class WinCredentialStoreBackendTest {
   public void testPasswordFlow() throws Exception {
     assumeTrue(Platform.isWindows());
     try (WinCredentialStoreBackend backend = new WinCredentialStoreBackend()) {
-      catchThrowable(() -> backend.deletePassword(SERVICE, ACCOUNT));
+      Throwable throwable = catchThrowable(() -> backend.deletePassword(SERVICE, ACCOUNT));
+      assertThat(throwable).isInstanceOf(PasswordAccessException.class);
       backend.setPassword(SERVICE, ACCOUNT, PASSWORD);
       assertThat(backend.getPassword(SERVICE, ACCOUNT)).isEqualTo(PASSWORD);
       backend.deletePassword(SERVICE, ACCOUNT);

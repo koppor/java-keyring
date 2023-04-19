@@ -98,20 +98,7 @@ public class WinCredentialStoreBackend implements KeyringBackend {
 
   @Override
   public void deletePassword(String service, String account) throws PasswordAccessException {
-    boolean success = false;
-    int count = 0;
-    while (!success && count < 10) {
-      nativeLibraries.getAdvapi32().CredDeleteA(service + '|' + account, new DWORD(1), new DWORD(0));
-      try {
-        getPassword(service, account);
-        Thread.sleep(10);
-      } catch (PasswordAccessException pae) {
-        success = true;
-      } catch (InterruptedException ie) {
-        throw new PasswordAccessException("Could not delete " + service + "." + account , ie);
-      }
-      count += 1;
-    }
+    boolean success = nativeLibraries.getAdvapi32().CredDeleteA(service + '|' + account, new DWORD(1), new DWORD(0));
     if (!success) {
       throw new PasswordAccessException("Error code " + nativeLibraries.getKernel32().GetLastError().intValue());
     }

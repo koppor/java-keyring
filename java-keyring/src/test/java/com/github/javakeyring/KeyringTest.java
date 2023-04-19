@@ -99,16 +99,17 @@ public class KeyringTest {
   @Test
   public void testPasswordFlow() throws Exception {
     try (Keyring keyring = Keyring.create()) {
-      catchThrowable(() -> keyring.deletePassword(SERVICE, ACCOUNT1));
-      assertThatThrownBy(() -> System.out.println("Should be deleted :" + keyring.getPassword(SERVICE, ACCOUNT1))).isInstanceOf(PasswordAccessException.class);
-      assertThatThrownBy(() -> keyring.deletePassword(SERVICE, ACCOUNT1)).isInstanceOf(PasswordAccessException.class);
-      keyring.setPassword(SERVICE, ACCOUNT1, PASSWORD1);
-      assertThat(keyring.getPassword(SERVICE, ACCOUNT1)).isEqualTo(PASSWORD1);
+      String service = "_"+SERVICE;
+      catchThrowable(() -> keyring.deletePassword(service+"_", ACCOUNT1));
+      assertThatThrownBy(() -> System.out.println("Should be deleted :" + keyring.getPassword(service, ACCOUNT1))).isInstanceOf(PasswordAccessException.class);
+      assertThatThrownBy(() -> keyring.deletePassword(service, ACCOUNT1)).isInstanceOf(PasswordAccessException.class);
+      keyring.setPassword(service, ACCOUNT1, PASSWORD1);
+      assertThat(keyring.getPassword(service, ACCOUNT1)).isEqualTo(PASSWORD1);
       //overwrite password
-      keyring.setPassword(SERVICE, ACCOUNT1, PASSWORD1 + "1");
-      assertThat(keyring.getPassword(SERVICE, ACCOUNT1)).isEqualTo(PASSWORD1 + "1");
-      keyring.deletePassword(SERVICE, ACCOUNT1);
-      assertThatThrownBy(() -> keyring.getPassword(SERVICE, ACCOUNT1)).isInstanceOf(PasswordAccessException.class);
+      keyring.setPassword(service, ACCOUNT1, PASSWORD1 + "1");
+      assertThat(keyring.getPassword(service, ACCOUNT1)).isEqualTo(PASSWORD1 + "1");
+      keyring.deletePassword(service, ACCOUNT1);
+      assertThatThrownBy(() -> keyring.getPassword(service, ACCOUNT1)).isInstanceOf(PasswordAccessException.class);
     }
   }
   

@@ -63,6 +63,9 @@ public class WinCredentialStoreBackend implements KeyringBackend {
     CREDENTIAL cred = new CREDENTIAL(ref.getValue());
     try {
       byte[] passbytes = cred.CredentialBlob.getByteArray(0,cred.CredentialBlobSize);
+      if (passbytes == null) {
+        throw new PasswordAccessException("Password not Found");
+      }
       return new String(passbytes, Charset.forName("UTF-16LE"));    
     } catch (Exception ex) {
       throw new PasswordAccessException(ex.getMessage());
@@ -78,17 +81,15 @@ public class WinCredentialStoreBackend implements KeyringBackend {
     cred.UserName = account;
     cred.Type = 1;
     byte[] bytes = password.getBytes(Charset.forName("UTF-16LE"));
-    Memory passwordMemory = new Memory(bytes.length);
+    
     Boolean success = false;
-    try {
+    try (Memory passwordMemory = new Memory(bytes.length)) {
       passwordMemory.write(0, bytes, 0, bytes.length);
       cred.CredentialBlob = passwordMemory;
       cred.CredentialBlobSize = bytes.length;
       cred.Persist = 2;
       success = nativeLibraries.getAdvapi32().CredWriteA(cred, new DWORD(0));
       passwordMemory.clear();
-    } finally {
-      passwordMemory.close();
     }
     if (!success) {
       throw new PasswordAccessException("Error code " + nativeLibraries.getKernel32().GetLastError().intValue());
@@ -100,19 +101,6 @@ public class WinCredentialStoreBackend implements KeyringBackend {
     boolean success = nativeLibraries.getAdvapi32().CredDeleteA(service + '|' + account, new DWORD(1), new DWORD(0));
     if (!success) {
       throw new PasswordAccessException("Error code " + nativeLibraries.getKernel32().GetLastError().intValue());
-    }
-    boolean visibile = true;
-    int retries = 0;
-    while ( visibile || retries < 10) {
-      try {
-        getPassword(service, account);
-        Thread.sleep(10);
-      } catch (PasswordAccessException pae) {
-        visibile = false;
-      } catch (InterruptedException ie) {
-        // nothing to do.
-      }
-      retries += 1;
     }
   }
 

@@ -20,8 +20,7 @@ Initially an abandoned bitbucket repo, but lotsa love has been given to it.
 *   Proper windows credential store access.
 *   Delete support.
 *   Solid testing.
-*   Automated builds in all target environments aside from Kwallet, if someone knows how to start it gha please share.
-*   Windows seems prone to race conditions where reads/writes may not be immediately visible.  PRs welcome.
+*   Automated builds in all target environments, though KWallet needs seeded with an existing wallet.
 
 Initial repo: [https://bitbucket.org/east301/java-keyring](https://bitbucket.org/east301/java-keyring)
 
@@ -61,33 +60,35 @@ Windows seems prone to race conditions where reads/writes may not be immediately
 Dirt simple:
 
 ```java
-    Keyring keyring = Keyring.create();
-    keyring.setPassword("domain", "account", "secret");
-    String secret = keyring.getPassword("domain", "account");
-    keyring.deletePassword("domain", "account");
+    try (Keyring keyring = Keyring.create()) {
+      keyring.setPassword("domain", "account", "secret");
+      String secret = keyring.getPassword("domain", "account");
+      keyring.deletePassword("domain", "account");
+    }
 ```
 
 Recommend creating a dummy value if getPassword() fails, so that users know where to go set the value in their applications.
 
 ```java
-    final Keyring keyring = Keyring.create();
-    final String domain = "someDomain";
-    final String account = "someAccount";
-    try {
-      return keyring.getPassword(domain, account);
-    } catch ( PasswordAccessException ex ) {
-      keyring.setPassword(domain, account, "ChangeMe");
-      throw new RuntimeException("Please add the correct credentials to you keystore " 
-          + keyring.getKeyringStorageType()
-          + ". The credential is stored under '" + domain + "|" + account + "'"
-          + "with a password that is currently 'ChangeMe'");
+    try (final Keyring keyring = Keyring.create()) {
+      final String domain = "someDomain";
+      final String account = "someAccount";
+      try {
+        return keyring.getPassword(domain, account);
+      } catch ( PasswordAccessException ex ) {
+        keyring.setPassword(domain, account, "ChangeMe");
+        throw new RuntimeException("Please add the correct credentials to you keystore " 
+            + keyring.getKeyringStorageType()
+            + ". The credential is stored under '" + domain + "|" + account + "'"
+            + "with a password that is currently 'ChangeMe'");
+      }
     }
 ```
 
 ## Building ##
 
 ```bash
-mvn clean install
+mvn clean install -Dgpg.skip=true
 ```
 
 ## License ##
@@ -100,6 +101,7 @@ See the file LICENSE.EAST301 for more details.
 Outstanding work:
 
 *   Windows error message conversion.
+*   Windows has no locking/session mechanism allowing for races between threads (like the maven tests in this project).
 *   Provide easy binding for Spring / CDI / etc.
 *   Support for build tools like Maven/Gradle.
 *   Perhaps optional UI requests for passwords (Wincred/secret-service have Apis at least to prompt users).

@@ -43,4 +43,14 @@ public class PasswordAccessException extends Exception {
     super(message);
   }
 
+  /**
+   * Initializes an instance of PasswordRetrievalException.
+   *
+   * @param message
+   *          Error message
+   */
+  public PasswordAccessException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
 }

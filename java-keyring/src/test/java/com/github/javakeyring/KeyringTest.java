@@ -100,8 +100,8 @@ public class KeyringTest {
   public void testPasswordFlow() throws Exception {
     try (Keyring keyring = Keyring.create()) {
       catchThrowable(() -> keyring.deletePassword(SERVICE, ACCOUNT1));
+      assertThatThrownBy(() -> System.out.println("Should be deleted :" + keyring.getPassword(SERVICE, ACCOUNT1))).isInstanceOf(PasswordAccessException.class);
       assertThatThrownBy(() -> keyring.deletePassword(SERVICE, ACCOUNT1)).isInstanceOf(PasswordAccessException.class);
-      assertThatThrownBy(() -> keyring.getPassword(SERVICE, ACCOUNT1)).isInstanceOf(PasswordAccessException.class);
       keyring.setPassword(SERVICE, ACCOUNT1, PASSWORD1);
       assertThat(keyring.getPassword(SERVICE, ACCOUNT1)).isEqualTo(PASSWORD1);
       //overwrite password

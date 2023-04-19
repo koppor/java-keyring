@@ -63,7 +63,7 @@ public class WinCredentialStoreBackend implements KeyringBackend {
     CREDENTIAL cred = new CREDENTIAL(ref.getValue());
     try {
       byte[] passbytes = cred.CredentialBlob.getByteArray(0,cred.CredentialBlobSize);
-      if (passbytes == null || passbytes.length == 0) {
+      if (passbytes == null) {
         throw new PasswordAccessException("Password not Found");
       }
       return new String(passbytes, Charset.forName("UTF-16LE"));    

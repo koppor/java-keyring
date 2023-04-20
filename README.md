@@ -56,7 +56,7 @@ Use a real password manager for your real secrets. Something like [KeePassXC](ht
 ### Windows
 
 * Passwords are stored using [Credential Manager](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager), exceptions will contain [Error Codes](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes). Access is via the [Wincred](https://docs.microsoft.com/en-us/windows/win32/api/wincred/) API.
-* Windows seems prone to race conditions where reads/writes may not be immediately visible.
+* The Windows implementation of credentials lacks the concept of a session (built in to all other apis), as such, reads may not follow writes if another process deletes what was just written.   In practice this may not be a concern, though a PR adding a global lock for Windows or internal caching of passwords to simulate a session would likely be approved.
 
 ## Usage
 

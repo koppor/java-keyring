@@ -10,7 +10,7 @@
 
     <groupId>com.github.javakeyring</groupId>
     <artifactId>java-keyring-parent</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <name>java-keyring-parent</name>
     <description>A Java library to store password securely</description>
@@ -26,9 +26,12 @@
         <github.site.location>${project.version}/</github.site.location>
         <!-- set the below parameter to false once you've cut your first release and you want semantic verion checking -->
         <parameter.disable.semantic.versioning>true</parameter.disable.semantic.versioning>
+        <parameter.java.version>11</parameter.java.version>
         <parameter.license>BSD-3</parameter.license>
         <parameter.organization.email>rex@e-hoffman.org</parameter.organization.email>
         <parameter.organization.name>Java Keyring</parameter.organization.name>
+        <parameter.owasp.failOnCVSSLevelOrGreater>11</parameter.owasp.failOnCVSSLevelOrGreater>
+        <version.owasp.check.maven.plugin>8.2.1</version.owasp.check.maven.plugin>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -111,8 +114,26 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                </configuration>
+            </plugin>
+        </plugins>    
+    </reporting>
     <inceptionYear>2019</inceptionYear>
     <organization>
         <name>${parameter.organization.name}</name>

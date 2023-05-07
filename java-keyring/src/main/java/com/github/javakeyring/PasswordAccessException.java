@@ -48,6 +48,8 @@ public class PasswordAccessException extends Exception {
    *
    * @param message
    *          Error message
+   * @param cause
+   *          Original throwable
    */
   public PasswordAccessException(String message, Throwable cause) {
     super(message, cause);

@@ -17,10 +17,6 @@ jobs:
       matrix:
         include:
           - os: "ubuntu-latest"
-            java-version: 8
-            distribution: 'adopt'
-            keyring: 'gnome'
-          - os: "ubuntu-latest"
             java-version: 11
             distribution: 'adopt'
             keyring: 'gnome'
@@ -28,10 +24,6 @@ jobs:
             java-version: 17
             distribution: 'adopt'
             keyring: 'gnome'
-          - os: "ubuntu-latest"
-            java-version: 8
-            distribution: 'adopt'
-            keyring: 'kde'
           - os: "ubuntu-latest"
             java-version: 11
             distribution: 'adopt'
@@ -41,16 +33,10 @@ jobs:
             distribution: 'adopt'
             keyring: 'kde'
           - os: "macos-latest"
-            java-version: 8
-            distribution: 'adopt'
-          - os: "macos-latest"
             java-version: 11
             distribution: 'adopt'
           - os: "macos-latest"
             java-version: 17
-            distribution: 'adopt'
-          - os: 'windows-latest'
-            java-version: 8
             distribution: 'adopt'
           - os: 'windows-latest'
             java-version: 11

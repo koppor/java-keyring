@@ -24,7 +24,7 @@
         <github.owner>javakeyring</github.owner>
         <github.project>java-keyring</github.project>
         <github.site.location>${project.version}/</github.site.location>
-        <!-- set the below parameter to false once you've cut your first release and you want semantic verion checking -->
+        <!-- set the below parameter to false once you've cut your first release and you want semantic version checking -->
         <parameter.disable.semantic.versioning>true</parameter.disable.semantic.versioning>
         <parameter.java.version>11</parameter.java.version>
         <parameter.license>BSD-3</parameter.license>

@@ -17,29 +17,15 @@ jobs:
       matrix:
         include:
           - os: "ubuntu-latest"
-            java-version: 11
-            distribution: 'adopt'
-            keyring: 'gnome'
-          - os: "ubuntu-latest"
             java-version: 17
             distribution: 'adopt'
             keyring: 'gnome'
-          - os: "ubuntu-latest"
-            java-version: 11
-            distribution: 'adopt'
-            keyring: 'kde'
           - os: "ubuntu-latest"
             java-version: 17
             distribution: 'adopt'
             keyring: 'kde'
           - os: "macos-latest"
-            java-version: 11
-            distribution: 'adopt'
-          - os: "macos-latest"
             java-version: 17
-            distribution: 'adopt'
-          - os: 'windows-latest'
-            java-version: 11
             distribution: 'adopt'
           - os: 'windows-latest'
             java-version: 17
@@ -60,6 +46,7 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
+          cache: 'maven'
       - name: Maven Install (macos, windows)
         if: (matrix.os != 'ubuntu-latest')
         run: mvn --batch-mode --update-snapshots -Dgpg.skip=true install

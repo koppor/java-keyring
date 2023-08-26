@@ -46,6 +46,7 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
+          cache: 'maven'
       - name: Maven Install (macos, windows)
         if: (matrix.os != 'ubuntu-latest')
         run: mvn --batch-mode --update-snapshots -Dgpg.skip=true install

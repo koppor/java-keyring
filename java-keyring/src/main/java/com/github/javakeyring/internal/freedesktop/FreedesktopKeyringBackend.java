@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.freedesktop.secret.simple.SimpleCollection;
+
 import com.github.javakeyring.BackendNotSupportedException;
 import com.github.javakeyring.PasswordAccessException;
 import com.github.javakeyring.internal.KeyringBackend;

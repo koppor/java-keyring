@@ -24,6 +24,12 @@
         <dependency>
             <groupId>de.swiesend</groupId>
             <artifactId>secret-service</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.hypfvieh</groupId>
+                    <artifactId>dbus-java-transport-native-unixsocket</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.hypfvieh</groupId>

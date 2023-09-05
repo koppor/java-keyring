@@ -8,9 +8,6 @@ on:
 
 jobs:
   build:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.java-version }}-${{ matrix.keyring }}
-      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

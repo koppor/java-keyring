@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.hypfvieh</groupId>
-            <artifactId>dbus-java-transport-native-unixsocket</artifactId>
+            <artifactId>dbus-java-transport-jnr-unixsocket</artifactId>
             <version>4.3.0</version>
         </dependency>
         <dependency>

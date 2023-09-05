@@ -67,7 +67,7 @@ public class FreedesktopKeyringBackedTest {
    */
   @Test
   public void testPasswordFlow() throws Exception {
-    //assumeTrue(Platform.isLinux() && Keyring.create().getKeyringStorageType() == KeyringStorageType.GNOME_KEYRING);
+    assumeTrue(Platform.isLinux() && Keyring.create().getKeyringStorageType() == KeyringStorageType.GNOME_KEYRING);
     FreedesktopKeyringBackend backend = new FreedesktopKeyringBackend();
     catchThrowable(() -> backend.deletePassword(SERVICE, ACCOUNT));
     checkExistenceOfPasswordEntry(backend);

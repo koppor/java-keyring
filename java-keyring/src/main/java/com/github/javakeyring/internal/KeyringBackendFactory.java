@@ -88,10 +88,10 @@ public class KeyringBackendFactory {
       throws BackendNotSupportedException {
     KeyringBackend backend;
     try {
-      backend = (KeyringBackend) keyring
+      backend = keyring
               .getSupportingClass()
               .getConstructor(new Class[] {})
-              .newInstance(new Object[]{});
+              .newInstance();
     } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException ex) {
       if (throwing) {
         throw new BackendNotSupportedException("Could not instantiate backend", ex);

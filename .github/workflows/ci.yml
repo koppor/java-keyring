@@ -32,7 +32,9 @@ jobs:
             distribution: 'adopt'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          show-progress: 'false'
       - name: Install packages on linux
         run: >
           if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ] && [ "${{matrix.keyring}}" == "gnome" ]; then
@@ -46,6 +48,7 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
+          cache: 'maven'
       - name: Maven Install (macos, windows)
         if: (matrix.os != 'ubuntu-latest')
         run: mvn --batch-mode --update-snapshots -Dgpg.skip=true install

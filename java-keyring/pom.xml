@@ -24,6 +24,26 @@
         <dependency>
             <groupId>de.swiesend</groupId>
             <artifactId>secret-service</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.hypfvieh</groupId>
+                    <artifactId>dbus-java-transport-native-unixsocket</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.hypfvieh</groupId>
+                    <artifactId>dbus-java-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java-transport-jnr-unixsocket</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java-core</artifactId>
+            <version>4.3.0</version>
         </dependency>
         <dependency>
             <groupId>net.java.dev.jna</groupId>
